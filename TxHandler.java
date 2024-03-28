@@ -1,4 +1,5 @@
 import java.math.BigInteger;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class TxHandler {
@@ -28,6 +29,7 @@ public class TxHandler {
 	public boolean isValidTx(Transaction tx) {
 		// public key is output addres
 		validOutput(tx.getOutputs(), tx.getHash());
+		validInputSignatures(tx);
 		return true;
 	}
 
@@ -41,15 +43,21 @@ public class TxHandler {
 		return true;
 	}
 
-	private boolean validInputSignatures(ArrayList<Transaction.Input> inputs, ArrayList<Transaction.Output> outputs){
-		
-		for(int i = 0; i < inputs.size(); i++){
-			if(!Crypto.verifySignature(null, null, null))
+	private boolean validInputSignatures(Transaction transaction) {
+		ArrayList<Transaction.Input> inputs = transaction.getInputs();
+		ArrayList<Transaction.Output> outputs = transaction.getOutputs();
+
+		for (int i = 0; i < inputs.size(); i++) {
+			Transaction.Input input = inputs.get(i);
+			Transaction.Output output = outputs.get(i);
+
+			if (!Crypto.verifySignature(
+					(PublicKey) output.address, transaction.getRawDataToSign(i),
+					input.signature)) {
+				return false;
+			}
 		}
-		
-		//if (!Crypto.verifySignature(output.address,message,signature)) {
-		
-		return false;
+		return true;
 	}
 
 	/*
