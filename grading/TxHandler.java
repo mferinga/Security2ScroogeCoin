@@ -46,14 +46,6 @@ public class TxHandler {
 		isValid = checkSumOfIndexValue(tx);
 
 		return isValid;
-
-		// if (validOutput(tx.getInputs()) &&
-		// validInputSignatures(tx) &&
-		// checkUtxoIsUsedOnce(tx.getInputs()) &&
-		// checkOutputValueIsPositive(tx.getOutputs()) &&
-		// checkSumOfIndexValue(tx)) {
-		// return true;
-		// }
 	}
 
 	// nummer 1
